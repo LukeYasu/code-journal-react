@@ -62,8 +62,7 @@ export function EntryForm() {
               value={entry ? entry.title : ''}
               onChange={(e) => {
                 if (entry) {
-                  entry.title = e.target.value;
-                  setEntry(entry);
+                  setEntry({ ...entry, title: e.target.value });
                 }
               }}
               required
@@ -78,9 +77,7 @@ export function EntryForm() {
             <input
               onChange={(e) => {
                 if (entry) {
-                  console.log(entry);
-                  entry.photoUrl = e.target.value;
-                  setEntry(entry);
+                  setEntry({ ...entry, photoUrl: e.target.value });
                 }
                 console.log(entry);
               }}
@@ -101,8 +98,7 @@ export function EntryForm() {
             <textarea
               onChange={(e) => {
                 if (entry) {
-                  entry.notes = e.target.value;
-                  setEntry(entry);
+                  setEntry({ ...entry, notes: e.target.value });
                 }
               }}
               value={entry?.notes ? entry.notes : ''}
