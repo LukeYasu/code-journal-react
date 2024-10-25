@@ -12,6 +12,8 @@ import {
 export function EntryForm() {
   const { entryId } = useParams();
   const [entry, setEntry] = useState<Entry | UnsavedEntry>();
+  const [error, setError] = useState<Error | unknown>();
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -26,6 +28,9 @@ export function EntryForm() {
         }
       } catch (error) {
         console.log('Error: ', error);
+        setError(error);
+      } finally {
+        setLoading(false);
       }
     }
     if (entryId === 'new') {
@@ -34,6 +39,7 @@ export function EntryForm() {
         notes: '',
         photoUrl: '',
       });
+      setLoading(false);
     } else if (entryId) {
       loadEntry(+entryId);
     } else {
@@ -43,7 +49,7 @@ export function EntryForm() {
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    navigate('/view-entries');
+    navigate('/');
     if (entryId === 'new') {
       addEntry(entry as UnsavedEntry);
     } else {
@@ -52,10 +58,18 @@ export function EntryForm() {
   }
 
   function handleDelete() {
-    navigate('/view-entries');
+    navigate('/');
     if (entryId) {
       removeEntry(+entryId);
     }
+  }
+
+  if (error) {
+    return <div className="error-message">{`${error}`}</div>;
+  }
+
+  if (loading) {
+    return <div>LOADING . . . </div>;
   }
 
   return (

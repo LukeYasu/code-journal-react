@@ -5,14 +5,31 @@ import { Link } from 'react-router-dom';
 
 export function ViewEntries() {
   const [entries, setEntries] = useState<Entry[]>();
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<Error | unknown>();
 
   useEffect(() => {
     async function loadEntries() {
-      const read = await readEntries();
-      setEntries(read);
+      try {
+        const read = await readEntries();
+        setEntries(read);
+      } catch (error) {
+        console.error(error);
+        setError(error);
+      } finally {
+        setLoading(false);
+      }
     }
     loadEntries();
   }, []);
+
+  if (loading) {
+    return <div>LOADING . . .</div>;
+  }
+
+  if (error) {
+    return <div className="error-message">{`${error}`}</div>;
+  }
 
   return (
     <div className="container" data-view="entries">
@@ -31,14 +48,14 @@ export function ViewEntries() {
       </div>
       <div className="row">
         <div className="column-full">
-          {entries ? (
+          {entries?.length ? (
             <ul className="entry-ul" id="entryUl">
               {entries.map((entry) => (
                 <EntryDisplay key={entry.entryId} entry={entry} />
               ))}
             </ul>
           ) : (
-            <div>no entries </div>
+            <div style={{ color: 'red' }}>NO ENTRIES </div>
           )}
         </div>
       </div>

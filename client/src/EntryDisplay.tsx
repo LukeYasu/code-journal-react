@@ -12,15 +12,21 @@ export function EntryDisplay({ entry }: EntryProp) {
       <div className="row">
         <div className="column-half">
           <div className="list-image-wrapper">
-            <img src={entry.photoUrl}></img>
+            <img style={{ borderRadius: 5 }} src={entry.photoUrl}></img>
           </div>
         </div>
         <div className="column-half">
-          <h2>{entry.title}</h2>
-          <Link to={`/entry-form/${entry.entryId}`}>
-            <FaPencil />
-          </Link>
-
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}>
+            <h2>{entry.title}</h2>
+            <Link to={`/entry-form/${entry.entryId}`}>
+              <FaPencil />
+            </Link>
+          </div>
           <p>{entry.notes}</p>
         </div>
       </div>

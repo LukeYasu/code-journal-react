@@ -12,7 +12,7 @@ function App() {
     <Routes>
       <Route path="/" element={<Header />}>
         <Route path="entry-form/:entryId" element={<EntryForm />} />
-        <Route path="view-entries" element={<ViewEntries />} />
+        <Route index element={<ViewEntries />} />
         <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>
