@@ -1,10 +1,18 @@
-import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { Entry, readEntry, UnsavedEntry } from './data';
+import { useEffect, useState, FormEvent } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import {
+  addEntry,
+  Entry,
+  readEntry,
+  UnsavedEntry,
+  updateEntry,
+  removeEntry,
+} from './data';
 
 export function EntryForm() {
   const { entryId } = useParams();
   const [entry, setEntry] = useState<Entry | UnsavedEntry>();
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function loadEntry(entryId: number) {
@@ -33,6 +41,23 @@ export function EntryForm() {
     }
   }, [entryId]);
 
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    navigate('/view-entries');
+    if (entryId === 'new') {
+      addEntry(entry as UnsavedEntry);
+    } else {
+      updateEntry(entry as Entry);
+    }
+  }
+
+  function handleDelete() {
+    navigate('/view-entries');
+    if (entryId) {
+      removeEntry(+entryId);
+    }
+  }
+
   return (
     <div className="container">
       <div className="row">
@@ -40,7 +65,7 @@ export function EntryForm() {
           <h1 id="formH1">New Entry</h1>
         </div>
       </div>
-      <form id="entryForm">
+      <form id="entryForm" onSubmit={handleSubmit}>
         <div className="row margin-bottom-1">
           <div className="column-half">
             <img
@@ -71,7 +96,7 @@ export function EntryForm() {
               id="formTitle"
               name="formTitle"
             />
-            <label className="margin-bottom-1 d-block" htmlFor="photoUrk">
+            <label className="margin-bottom-1 d-block" htmlFor="photoUrl">
               Photo URL
             </label>
             <input
@@ -112,12 +137,15 @@ export function EntryForm() {
         </div>
         <div className="row">
           <div className="column-full d-flex justify-between">
-            <button
-              className="invisible delete-entry-button"
-              type="button"
-              id="deleteEntry">
-              Delete Entry
-            </button>
+            {entryId !== 'new' && (
+              <button
+                onClick={handleDelete}
+                className=" delete-entry-button"
+                type="button"
+                id="deleteEntry">
+                Delete Entry
+              </button>
+            )}
             <button className="input-b-radius text-padding purple-background white-text">
               SAVE
             </button>
