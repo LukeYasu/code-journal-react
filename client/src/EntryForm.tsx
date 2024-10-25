@@ -59,6 +59,7 @@ export function EntryForm() {
               Title
             </label>
             <input
+              value={entry ? entry.title : ''}
               onChange={(e) => {
                 if (entry) {
                   entry.title = e.target.value;
@@ -70,7 +71,6 @@ export function EntryForm() {
               type="text"
               id="formTitle"
               name="formTitle"
-              value={entry?.title ? entry.title : ''}
             />
             <label className="margin-bottom-1 d-block" htmlFor="photoUrk">
               Photo URL
@@ -105,7 +105,7 @@ export function EntryForm() {
                   setEntry(entry);
                 }
               }}
-              value={entry?.notes ? entry.notes : ''}
+              value={entry ? entry.notes : ''}
               required
               className="input-b-color text-padding input-b-radius purple-outline d-block width-100"
               name="formNotes"
