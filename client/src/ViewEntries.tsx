@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 export function ViewEntries() {
-  const [entries, setEntries] = useState<Entry[]>();
+  const [entries, setEntries] = useState<Entry[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | unknown>();
 
@@ -48,7 +48,7 @@ export function ViewEntries() {
       </div>
       <div className="row">
         <div className="column-full">
-          {entries?.length ? (
+          {entries.length ? (
             <ul className="entry-ul" id="entryUl">
               {entries.map((entry) => (
                 <EntryDisplay key={entry.entryId} entry={entry} />

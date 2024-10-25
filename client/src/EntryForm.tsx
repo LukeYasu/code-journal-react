@@ -51,28 +51,28 @@ export function EntryForm() {
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    navigate('/');
     if (entryId === 'new') {
       addEntry(entry as UnsavedEntry);
     } else {
       updateEntry(entry as Entry);
     }
+    navigate('/');
   }
 
   function handleDelete() {
-    navigate('/');
     setConfirmationOpen(false);
     if (entryId) {
       removeEntry(+entryId);
     }
-  }
-
-  if (error) {
-    return <div className="error-message">{`${error}`}</div>;
+    navigate('/');
   }
 
   if (loading) {
     return <div>LOADING . . . </div>;
+  }
+
+  if (error || !entry) {
+    return <div className="error-message">{`${error}`}</div>;
   }
 
   return (
@@ -88,11 +88,7 @@ export function EntryForm() {
             <img
               className="input-b-radius form-image"
               id="formImage"
-              src={
-                entry?.photoUrl
-                  ? entry.photoUrl
-                  : '/images/placeholder-image-square.jpg'
-              }
+              src={entry.photoUrl ?? '/images/placeholder-image-square.jpg'}
               alt="image of entry image"
             />
           </div>
@@ -101,12 +97,8 @@ export function EntryForm() {
               Title
             </label>
             <input
-              value={entry ? entry.title : ''}
-              onChange={(e) => {
-                if (entry) {
-                  setEntry({ ...entry, title: e.target.value });
-                }
-              }}
+              value={entry.title}
+              onChange={(e) => setEntry({ ...entry, title: e.target.value })}
               required
               className="input-b-color text-padding input-b-radius purple-outline input-height margin-bottom-2 d-block width-100"
               type="text"
@@ -117,17 +109,13 @@ export function EntryForm() {
               Photo URL
             </label>
             <input
-              onChange={(e) => {
-                if (entry) {
-                  setEntry({ ...entry, photoUrl: e.target.value });
-                }
-              }}
+              onChange={(e) => setEntry({ ...entry, photoUrl: e.target.value })}
               required
               className="input-b-color text-padding input-b-radius purple-outline input-height margin-bottom-2 d-block width-100"
               type="text"
               id="formURL"
               name="formURL"
-              value={entry?.photoUrl ? entry.photoUrl : ''}
+              value={entry.photoUrl}
             />
           </div>
         </div>
@@ -137,12 +125,8 @@ export function EntryForm() {
               Notes
             </label>
             <textarea
-              onChange={(e) => {
-                if (entry) {
-                  setEntry({ ...entry, notes: e.target.value });
-                }
-              }}
-              value={entry?.notes ? entry.notes : ''}
+              onChange={(e) => setEntry({ ...entry, notes: e.target.value })}
+              value={entry.notes}
               required
               className="input-b-color text-padding input-b-radius purple-outline d-block width-100"
               name="formNotes"
