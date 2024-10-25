@@ -8,12 +8,14 @@ import {
   updateEntry,
   removeEntry,
 } from './data';
+import { Modal } from './Modal';
 
 export function EntryForm() {
   const { entryId } = useParams();
   const [entry, setEntry] = useState<Entry | UnsavedEntry>();
   const [error, setError] = useState<Error | unknown>();
   const [loading, setLoading] = useState(true);
+  const [confirmationOpen, setConfirmationOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -59,6 +61,7 @@ export function EntryForm() {
 
   function handleDelete() {
     navigate('/');
+    setConfirmationOpen(false);
     if (entryId) {
       removeEntry(+entryId);
     }
@@ -118,7 +121,6 @@ export function EntryForm() {
                 if (entry) {
                   setEntry({ ...entry, photoUrl: e.target.value });
                 }
-                console.log(entry);
               }}
               required
               className="input-b-color text-padding input-b-radius purple-outline input-height margin-bottom-2 d-block width-100"
@@ -153,7 +155,7 @@ export function EntryForm() {
           <div className="column-full d-flex justify-between">
             {entryId !== 'new' && (
               <button
-                onClick={handleDelete}
+                onClick={() => setConfirmationOpen(true)}
                 className=" delete-entry-button"
                 type="button"
                 id="deleteEntry">
@@ -163,6 +165,15 @@ export function EntryForm() {
             <button className="input-b-radius text-padding purple-background white-text">
               SAVE
             </button>
+            <Modal isOpen={confirmationOpen}>
+              <p>Are you sure you want to delete?</p>
+              <button type="button" onClick={() => setConfirmationOpen(false)}>
+                Cancel
+              </button>
+              <button type="button" onClick={handleDelete}>
+                Confirm
+              </button>
+            </Modal>
           </div>
         </div>
       </form>
