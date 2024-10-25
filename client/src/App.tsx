@@ -11,7 +11,7 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<Header />}>
-        <Route path="entry-form" element={<EntryForm />} />
+        <Route path="entry-form/:entryId" element={<EntryForm />} />
         <Route path="view-entries" element={<ViewEntries />} />
         <Route path="*" element={<NotFound />} />
       </Route>

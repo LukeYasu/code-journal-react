@@ -1,4 +1,38 @@
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { Entry, readEntry, UnsavedEntry } from './data';
+
 export function EntryForm() {
+  const { entryId } = useParams();
+  const [entry, setEntry] = useState<Entry | UnsavedEntry>();
+
+  useEffect(() => {
+    async function loadEntry(entryId: number) {
+      try {
+        const entry = await readEntry(entryId);
+
+        if (!entry) {
+          throw new Error(`Entry not found ${entryId}  >:/`);
+        } else {
+          setEntry(entry);
+        }
+      } catch (error) {
+        console.log('Error: ', error);
+      }
+    }
+    if (entryId === 'new') {
+      setEntry({
+        title: '',
+        notes: '',
+        photoUrl: '',
+      });
+    } else if (entryId) {
+      loadEntry(+entryId);
+    } else {
+      throw new Error('Error no Entry Id Provided :^)');
+    }
+  }, [entryId]);
+
   return (
     <div className="container">
       <div className="row">
@@ -12,7 +46,11 @@ export function EntryForm() {
             <img
               className="input-b-radius form-image"
               id="formImage"
-              src="./images/placeholder-image-square.jpg"
+              src={
+                entry?.photoUrl
+                  ? entry.photoUrl
+                  : '/images/placeholder-image-square.jpg'
+              }
               alt="image of entry image"
             />
           </div>
@@ -21,21 +59,37 @@ export function EntryForm() {
               Title
             </label>
             <input
+              onChange={(e) => {
+                if (entry) {
+                  entry.title = e.target.value;
+                  setEntry(entry);
+                }
+              }}
               required
               className="input-b-color text-padding input-b-radius purple-outline input-height margin-bottom-2 d-block width-100"
               type="text"
               id="formTitle"
               name="formTitle"
+              value={entry?.title ? entry.title : ''}
             />
             <label className="margin-bottom-1 d-block" htmlFor="photoUrk">
               Photo URL
             </label>
             <input
+              onChange={(e) => {
+                if (entry) {
+                  console.log(entry);
+                  entry.photoUrl = e.target.value;
+                  setEntry(entry);
+                }
+                console.log(entry);
+              }}
               required
               className="input-b-color text-padding input-b-radius purple-outline input-height margin-bottom-2 d-block width-100"
               type="text"
               id="formURL"
               name="formURL"
+              value={entry?.photoUrl ? entry.photoUrl : ''}
             />
           </div>
         </div>
@@ -45,6 +99,13 @@ export function EntryForm() {
               Notes
             </label>
             <textarea
+              onChange={(e) => {
+                if (entry) {
+                  entry.notes = e.target.value;
+                  setEntry(entry);
+                }
+              }}
+              value={entry?.notes ? entry.notes : ''}
               required
               className="input-b-color text-padding input-b-radius purple-outline d-block width-100"
               name="formNotes"
