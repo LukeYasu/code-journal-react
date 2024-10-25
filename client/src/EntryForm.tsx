@@ -105,7 +105,7 @@ export function EntryForm() {
                   setEntry(entry);
                 }
               }}
-              value={entry ? entry.notes : ''}
+              value={entry?.notes ? entry.notes : ''}
               required
               className="input-b-color text-padding input-b-radius purple-outline d-block width-100"
               name="formNotes"
